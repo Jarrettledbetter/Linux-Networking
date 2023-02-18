@@ -1,0 +1,16 @@
+#!/bin/bash
+
+sudo echo “1” >  /proc/sys/net/ipv4/ip_forward
+
+sudo ifconfig eth1 down
+sudo ifconfig eth1 up
+
+sudo iptables -A FORWARD -i eth1 -j ACCEPT         # forward inbound packets
+sudo iptables -A FORWARD -o eth1 -j ACCEPT        # forward outbound packets
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+sudo iptables --list
+
+sudo systemctl status firewalld 
+sudo systemctl disable firewalld
+sudo systemctl status firewalld 
